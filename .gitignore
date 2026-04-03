@@ -1,0 +1,41 @@
+# =========================
+# Laravel / PHP
+# =========================
+vendor/
+node_modules/
+public/build/
+public/hot
+public/storage
+storage/*.key
+.env
+.env.backup
+.env.testing
+*.sqlite
+
+# =========================
+# Express / Node.js
+# =========================
+node_modules/
+npm-debug.log
+yarn-error.log
+serviceAccountKey.json
+
+# =========================
+# Python (Django / Flask)
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+db.sqlite3
+.pytest_cache/
+
+# =========================
+# OS / Entornos / IDE
+# =========================
+.DS_Store
+.vscode/
+.idea/
+*.log
