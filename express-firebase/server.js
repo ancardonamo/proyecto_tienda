@@ -1,0 +1,71 @@
+const express = require("express");
+const db = require("./firebase");
+
+const app = express();
+app.use(express.json());
+
+const TOKEN_SECRETO = "miclave123";
+
+function requireToken(req, res, next) {
+    const token = req.headers["authorization"];
+    if (token !== `Token ${TOKEN_SECRETO}`) {
+        return res.status(403).json({ error: "No autorizado" });
+    }
+    next();
+}
+
+app.post("/users", requireToken, function (req, res) {    
+    const ref = db.ref("users").push();
+    ref.set({
+        name: req.body.name,
+        email: req.body.email,
+        createdAt: Date.now()
+    }).then(function () {
+        res.status(201).json({ message: "Guardado", id: ref.key });
+    });
+});
+
+app.get("/users", requireToken, function (_, res) {    
+    db.ref("users").once("value").then(function (snap) {
+        const data = snap.val();
+        const users = [];
+        for (let id in data) {
+            users.push({
+                id: id,
+                name: data[id].name,
+                email: data[id].email,
+            });
+        }
+        res.json(users);
+    });
+});
+
+app.get("/users/:id", function (req, res) {
+    db.ref("users/" + req.params.id).once("value").then(function (snapshot) {
+        if(!snapshot.exists()) return res.status(404).json({error: "No encontrado"});
+        res.json({
+            id: req.params.id,
+            name: snapshot.val().name,
+            email: snapshot.val().email
+        });
+    });
+});
+
+app.put("/users/:id", function (req, res) {
+    db.ref("users/" + req.params.id)
+        .update(req.body)
+        .then(() => res.json({ message: "Actualizado" }))
+        .catch(err => res.status(500).json({ error: err.message }));
+});
+
+app.delete("/users/:id", function (req, res) {
+    db.ref("users/" + req.params.id)
+        .remove()
+        .then(() => res.json({ message: "Eliminado" }))
+        .catch(err => res.status(500).json({ error: err.message }));
+});
+
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor Express corriendo en el puerto ${PORT}`);
+});
