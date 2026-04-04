@@ -37,12 +37,23 @@ class UserController extends Controller
 
     public function password_reset(Request $request)
     {
-        $user = User::where('question', $request->question)->where('answer', $request->answer)->first();
+        $request->validate([
+            'email' => 'required|email',
+            'answer' => 'required|string',
+            'password' => 'required|string|min:6|confirmed', 
+        ]);
+
+        $user = User::where('email', $request->email)
+                    ->where('answer', $request->answer)
+                    ->first();
+
         if (!$user) {
-            return response()->json(['message' => 'Incorrect security question or answer'], 401);
+            return response()->json(['message' => 'Incorrect email or security answer'], 401);
         }
-        $user->password = bcrypt($request->new_password);
+
+        $user->password = bcrypt($request->password);
         $user->save();
+
         return response()->json(['message' => 'Password reset successfully']);
     }
 }

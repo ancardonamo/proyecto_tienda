@@ -2,25 +2,49 @@
 
 ## Paso 1: API Gateway (Laravel)
 - Puerto: 8080
-- Comando: `php artisan serve --port=8080`
+- Comandos: cd api-gateway
+            composer install
+            cp .env.example .env
+            # IMPORTANTE: Editar el .env con las credenciales la BD
+            php artisan key:generate
+            php artisan migrate
+            php artisan serve --port=8080
+
 - Requisito: Base de datos MySQL para usuarios locales.
 
 ## Paso 2: Productos (Django)
 - Puerto: 8000
-- Comando: `python manage.py runserver`
+- Comando:  cd django-api
+            pip install -r requirements.txt
+            # Configurar BD MySQL en settings.py 'NAME': 'nombre_BD' o en la BD ponerle "proyecto_django" tal cual
+            python manage.py migrate
+            python manage.py runserver
+
 - Requisito: MySQL activo
+
 
 ## Paso 3: Pedidos (Flask)
 - Puerto: 5000
-- Comando: `flask run --port=5000`
+- Comando:  cd flask-api-pedidos
+            pip install -r requirements.txt
+            # IMPORTANTE: Editar el .env con las credenciales la BD
+            flask db upgrade
+            flask run --port=5000
 - Requisito: MySQL activo
 
 ## Paso 4: Inventario (Flask)
 - Puerto: 5001
-- Comando: `flask run --port=5001`
+- Comando: cd flask-api-inventario
+            pip install -r requirements.txt
+            # IMPORTANTE: Editar el .env con las credenciales la BD
+            flask db upgrade
+            flask run --port=5001
 - Requisito: PostgreSQL activo
 
 ## Paso 5: Usuarios (Express)
 - Puerto: 3000
-- Comando: `npm start`
+- Comando:  cd express-firebase
+            npm install
+            # Descargar archivo de credenciales de firebase, renombrarlo como serviceAccountKey.json y pegarlo en la carpeta express-firebase
+            npm start
 - Requisito: Credenciales de Firebase (SDK Admin)
