@@ -1,0 +1,3 @@
+CREATE DATABASE IF NOT EXISTS proyecto_django;
+CREATE DATABASE IF NOT EXISTS proyecto_laravel;
+CREATE DATABASE IF NOT EXISTS proyecto_pedidos;

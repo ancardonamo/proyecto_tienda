@@ -1,0 +1,58 @@
+services:
+  # Base de Datos MySQL 
+  db-mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+    # Este comando crea las bases de datos necesarias al iniciar
+    command: --init-file="/docker-entrypoint-initdb.d/init.sql"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+
+  # Base de Datos PostgreSQL (Para Inventario) 
+  db-postgres:
+    image: postgres:15 
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root_password
+      - POSTGRES_DB=mydatabase 
+    ports:
+      - "5432:5432"
+
+  # Microservicios
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080" 
+    depends_on:
+      - db-mysql
+
+  productos-django:
+    build: ./django-api
+    command: python manage.py runserver 0.0.0.0:8000 
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db-mysql
+
+  pedidos-flask:
+    build: ./flask-api-pedidos
+    command: flask run --host=0.0.0.0 --port=5000 
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db-mysql
+
+  inventario-flask:
+    build: ./flask-api-inventario
+    ports:
+      - "5001:5001" 
+    depends_on:
+      - db-postgres
+
+  usuarios-express:
+    build: ./express-firebase
+    ports:
+      - "3000:3000" 
