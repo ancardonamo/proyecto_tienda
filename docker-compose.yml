@@ -1,13 +1,13 @@
 services:
-  # Base de Datos MySQL 
+  # Base de Datos MySQL
   db-mysql:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root_password
-    # Este comando crea las bases de datos necesarias al iniciar
     command: --init-file="/docker-entrypoint-initdb.d/init.sql"
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
 
@@ -18,41 +18,59 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root_password
       - POSTGRES_DB=mydatabase 
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
-  # Microservicios
+  # API Gateway (Laravel)
   api-gateway:
     build: ./api-gateway
     ports:
       - "8080:8080" 
     depends_on:
       - db-mysql
+      - productos-django
+      - usuarios-express
+      - pedidos-flask
 
+  # Microservicio Django
   productos-django:
     build: ./django-api
+    # IMPORTANTE: 0.0.0.0 es obligatorio para que Laravel pueda entrar aquí
     command: python manage.py runserver 0.0.0.0:8000 
     ports:
       - "8000:8000"
     depends_on:
       - db-mysql
 
+  # Microservicio Flask Pedidos
   pedidos-flask:
     build: ./flask-api-pedidos
+    # IMPORTANTE: host=0.0.0.0 para visibilidad interna
     command: flask run --host=0.0.0.0 --port=5000 
     ports:
       - "5000:5000"
     depends_on:
       - db-mysql
 
+  # Microservicio Flask Inventario
   inventario-flask:
     build: ./flask-api-inventario
+    # Agregamos el comando aquí también
+    command: flask run --host=0.0.0.0 --port=5001
     ports:
       - "5001:5001" 
     depends_on:
       - db-postgres
 
+  # Microservicio Express
   usuarios-express:
     build: ./express-firebase
     ports:
       - "3000:3000" 
+
+# Definición de volúmenes para que los datos vivan fuera de los contenedores
+volumes:
+  mysql_data:
+  postgres_data:

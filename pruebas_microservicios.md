@@ -21,7 +21,8 @@ Este documento detalla el flujo de pruebas para validar el sistema de microservi
     "name": "Andres Cardona",
     "email": "andres@example.com",
     "password": "root_password",
-    "password_confirmation": "root_password"
+    "question": "Nombre de mi mascota",
+    "answer": "Firulais"
 }
 ```
 
@@ -67,15 +68,14 @@ Gestiona registros en la nube de Firebase.
 ## Crear Usuario
 
 - **Método:** `POST`
-- **URL:** `http://localhost:3000/api/usuarios`
+- **URL:** `http://localhost:8080/api/usuarios`
 
 ### Body (JSON)
 
 ```json
 {
-    "nombre": "Juan Perez",
-    "email": "juan@example.com",
-    "rol": "cliente"
+  "name": "Juan Perez",
+  "email": "juan@example.com"
 }
 ```
 
@@ -84,14 +84,14 @@ Gestiona registros en la nube de Firebase.
 ## Actualizar Usuario
 
 - **Método:** `PUT`
-- **URL:** `http://localhost:3000/api/usuarios/{id_firebase}`
+- **URL:** `http://localhost:8080/api/usuarios/{id_firebase}`
 
 ### Body (JSON)
 
 ```json
 {
-    "nombre": "Juan Perez Actualizado",
-    "rol": "admin"
+  "name": "Juan Perez",
+  "email": "juan@example.com"
 }
 ```
 
@@ -104,16 +104,15 @@ Operaciones sobre la base de datos `proyecto_django`.
 ## Agregar Producto
 
 - **Método:** `POST`
-- **URL:** `http://localhost:8000/api/productos`
+- **URL:** `http://localhost:8080/api/productos`
 
 ### Body (JSON)
 
 ```json
 {
     "nombre": "Monitor Gamer 24p",
-    "precio": 150.00,
     "descripcion": "144Hz, 1ms respuesta",
-    "stock": 20
+    "precio": 150.00
 }
 ```
 
@@ -142,16 +141,14 @@ Gestión de órdenes en `proyecto_pedidos`.
 ## Registrar Pedido
 
 - **Método:** `POST`
-- **URL:** `http://localhost:5000/api/pedidos`
+- **URL:** `http://localhost:8080/api/pedidos`
 
 ### Body (JSON)
 
 ```json
 {
-    "producto_id": 1,
-    "cantidad": 2,
-    "total": 271.00,
-    "estado": "pendiente"
+    "usuario_id": 1,
+    "total": 275.00
 }
 ```
 
@@ -160,7 +157,7 @@ Gestión de órdenes en `proyecto_pedidos`.
 ## Actualizar Estado de Pedido
 
 - **Método:** `PUT`
-- **URL:** `http://localhost:5000/api/pedidos/{id}`
+- **URL:** `http://localhost:8080/api/pedidos/{id}`
 
 ### Body (JSON)
 
@@ -179,33 +176,33 @@ Control de stock en la base de datos `mydatabase`.
 ## Registrar Entrada de Inventario
 
 - **Método:** `POST`
-- **URL:** `http://localhost:5001/api/inventario`
+- **URL:** `http://localhost:8080/api/inventario`
 
 ### Body (JSON)
 
 ```json
 {
-    "name": "Lote Monitores Mayo",
-    "email": "bodega@tienda.com"
+  "producto_id": 1,
+  "cantidad": 50,
+  "ubicacion": "Bodega Norte"
 }
 ```
 
-> **Nota:**  
-> El script actual usa `name` y `email` como campos de ejemplo para la tabla `users` en PostgreSQL.
+
 
 ---
 
 ## Ajustar Inventario
 
 - **Método:** `PUT`
-- **URL:** `http://localhost:5001/api/inventario/{id}`
+- **URL:** `http://localhost:8080/api/inventario/{id}`
 
 ### Body (JSON)
 
 ```json
 {
-    "name": "Lote Actualizado",
-    "email": "supervisor@tienda.com"
+  "cantidad": 52,
+  "ubicacion": "Bodega Norte"
 }
 ```
 

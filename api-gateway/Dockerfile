@@ -20,6 +20,7 @@ COPY . .
 
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
+RUN mkdir -p /app/storage /app/cache
 
 RUN chown -R www-data:www-data /app/storage /app/cache
 
