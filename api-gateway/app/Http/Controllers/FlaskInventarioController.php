@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 class FlaskInventarioController extends Controller
 {
-    private $baseUrl = 'http://127.0.0.1:5001/api'; // Flask Inventario en puerto 5001
+    private $baseUrl = 'http://inventario-flask:5001/api'; // Flask Inventario en puerto 5001
 
     public function index()
     {

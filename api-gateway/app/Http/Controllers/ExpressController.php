@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 class ExpressController extends Controller
 {
-    private $baseUrl = 'http://127.0.0.1:3000';
+    private $baseUrl = 'http://usuarios-express:3000';
     private $token = 'Token miclave123'; // Requerido por tu middleware de Express
 
     public function index()
