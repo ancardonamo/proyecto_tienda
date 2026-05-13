@@ -227,3 +227,20 @@ Para estos endpoints no necesitas enviar un cuerpo JSON, solo el ID en la URL y 
 - **URL:** `http://localhost:8080/api/logout`
 
 
+# docker compose exec api-gateway ./vendor/bin/phpunit --filter MicroservicesTest --testdox
+
+## 1. Detener y borrar los contenedores actuales
+docker compose down
+
+# 2. Levantar y forzar el "build" para que lea el nuevo MicroservicesTest.php
+docker compose up -d --build
+
+# 3. Instalar dependencias (por si acaso faltan en el vendor)
+docker compose exec api-gateway composer install
+
+# 4. Generar la llave de la aplicación
+docker compose exec api-gateway php artisan key:generate
+
+# 5. Limpiar toda la caché de Laravel
+docker compose exec api-gateway php artisan config:clear
+docker compose exec api-gateway php artisan cache:clear
